@@ -25,21 +25,24 @@ int main(int argc, char *argv[]){
         perror("dead data");
 		data=(char *)malloc(99*sizeof(char));
     }
-	printf("Enter a string: ");
+	if(!strcmp(data,"")){
+	printf("A new memory segment was created!\n");
+	}
+	else{
+	printf("These are the current contents of the shared memory: %s\n", data);
+	}
+	printf("Do you want to modify this shared memory?[Yes/No]");
 	fgets (input , 99 , stdin);
 	//printf("%s",input);
 	input[strlen(input)-1] = 0;
 	//printf("%d\n",strcmp(input,"Yes"));
 	if(!strcmp(input,"Yes")){
-		printf("Enter a string: ");
+		printf("Enter a string:");
 		fgets (input , 99 , stdin);
 		input[strlen(input)-1] = 0;
 		strcpy(data,input);
 	}
-	else{
-		printf("shared contents: %s\n", data);
-	}
-	printf("Delete?");
+	printf("Delete this shared memory?[Yes/No]");
 	fgets (input , 99 , stdin);
 	input[strlen(input)-1] = 0;
 	if(!strcmp(input,"Yes")){
