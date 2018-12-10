@@ -14,27 +14,35 @@ int size;
 int shmflag;
 int shmid;
 char *data;
-char line[99];
+char input[99];
 int main(int argc, char *argv[]){
 	key=ftok("shmegegge.c",'R');
-	if(shmget(key,200,0644)==-1){
-	printf("created new key");
+	if((shmid =shmget(key,200*sizeof(char),0644 | IPC_CREAT))==-1){
+	printf("created new key\n");
 	}
-	shmid=shmget(key,200,0644 |IPC_CREAT);
 	data = shmat(shmid, (void *)0, 0);
+	if (data == (char *)(-1)) {
+        perror("dead data");
+		data=(char *)malloc(99*sizeof(char));
+    }
 	printf("Enter a string: ");
-	gets(data);
-	if(!strcmp(data,"Yes")){
+	fgets (input , 99 , stdin);
+	//printf("%s",input);
+	input[strlen(input)-1] = 0;
+	//printf("%d\n",strcmp(input,"Yes"));
+	if(!strcmp(input,"Yes")){
 		printf("Enter a string: ");
-		gets(line);
-		strcpy(data,line);
+		fgets (input , 99 , stdin);
+		input[strlen(input)-1] = 0;
+		strcpy(data,input);
 	}
 	else{
 		printf("shared contents: %s\n", data);
 	}
 	printf("Delete?");
-	gets(data);
-	if(!strcmp(data,"Yes")){
+	fgets (input , 99 , stdin);
+	input[strlen(input)-1] = 0;
+	if(!strcmp(input,"Yes")){
 		shmdt(data);
 		shmctl(shmid, IPC_RMID, NULL);
 	}
